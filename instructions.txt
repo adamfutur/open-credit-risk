@@ -1,0 +1,140 @@
+PROJECT: Open Credit Risk: Assessment & Default Prediction Engine
+STATUS: Not started. This file is the brief to build from — no code exists yet.
+OWNER GOAL: Portfolio project for banking / finance-analyst / data-analyst applications
+(Société Générale, KPMG, Deloitte, banks).
+
+====================================================================
+1. BUSINESS PROBLEM (as specified)
+====================================================================
+Prédire la probabilité de défaut de paiement (Probability of Default - PD) d'un
+emprunteur à partir de données financières, tout en fournissant une explication
+automatisée du refus ou de l'acceptation du prêt pour respecter les normes
+réglementaires.
+
+====================================================================
+2. TECH STACK (as specified — build all of it, nothing trimmed)
+====================================================================
+- Langages & Libs: Python, PySpark [swapped to Polars, 2026-09-22 — see note
+  below, decision made by the user], XGBoost, LightGBM, Scikit-Learn
+- Explicabilité des décisions: SHAP (SHapley Additive exPlanations), LIME
+- Gestion des données: SQL, Pandas, Imbalanced-learn (SMOTE pour gérer le
+  déséquilibre des classes de défaut)
+- MLOps & déploiement: FastAPI, Docker, MLflow (tracking des modèles)
+
+NOTE (2026-09-22): PySpark was dropped after real install friction — 4.x needs
+Java 17 (machine has Java 11), and 3.5.x failed a clean download (corrupted/
+hash-mismatched over a slow connection). At 150,000 rows the data doesn't need
+a distributed engine either. User asked directly for a lighter alternative;
+swapped to Polars (no JVM, installs in seconds, genuinely current tool at this
+scale). This is the one deliberate deviation from the original brief — every
+other item in the stack list was built as specified.
+
+====================================================================
+3. WHAT THE PROJECT MUST CONTAIN (as specified — all four points)
+====================================================================
+
+1) Feature Engineering Financier
+   - Calcul de ratios financiers clés: Debt-to-Income (DTI), Credit Utilization
+     Ratio, historique de paiement, volatilité des revenus.
+   - Traitement du déséquilibre des données (taux de défaut réel ~2-5%).
+
+2) Modélisation & Comparaison
+   - Entraînement d'un modèle traditionnel (Régression Logistique / Scorecard
+     classique) vs un modèle avancé (XGBoost / Random Forest).
+   - Évaluation via des métriques bancaires réelles: AUC-ROC, Coefficient de Gini,
+     Kolmogorov-Smirnov (KS test).
+
+3) Explicabilité (la clé pour les banques)
+   - Génération de graphiques SHAP montrant pourquoi une demande de prêt a été
+     rejetée (ex: "Le DTI supérieur à 45% a contribué à +35% dans la décision de
+     refus").
+   - LIME en complément de SHAP.
+
+4) Déploiement MLOps
+   - Une API FastAPI conteneurisée avec Docker qui prend en entrée le profil d'un
+     client et renvoie un score de risque + l'explication SHAP.
+   - MLflow pour le tracking des modèles (runs, paramètres, métriques, versions).
+
+====================================================================
+4. DATA
+====================================================================
+No real bank data available — use a public credit-risk dataset:
+- Kaggle "Give Me Some Credit" — https://www.kaggle.com/c/GiveMeSomeCredit
+- Kaggle "Home Credit Default Risk" — https://www.kaggle.com/c/home-credit-default-risk
+  (richer, multiple linked tables, better fit for the SQL step)
+- UCI "German Credit Data" (fallback, smaller)
+
+SQL step: load the raw CSV(s) into a local SQLite/Postgres DB and do the joining/
+aggregation (e.g. Home Credit's linked tables) in SQL before moving to pandas, so
+the "SQL" item in the stack is real and not just pandas relabeled.
+
+PySpark step: run at least the feature-engineering / aggregation stage through
+PySpark (even if the data would fit in pandas alone) so the PySpark item in the
+stack is genuinely exercised, not skipped for convenience.
+
+====================================================================
+5. PROJECT STRUCTURE
+====================================================================
+open-credit-risk/
+├── data/
+│   ├── raw/                  # downloaded Kaggle CSVs (gitignored)
+│   └── processed/
+├── sql/
+│   └── build_features.sql    # joins/aggregations before pandas/PySpark
+├── src/
+│   ├── build_features.py     # Polars feature engineering / aggregation (was
+│   │                          #   planned as PySpark — see note below)
+│   ├── features.py           # DTI, utilization, payment history, income volatility
+│   ├── imbalance.py          # SMOTE (imbalanced-learn)
+│   ├── models.py             # Logistic Regression / Scorecard + XGBoost + LightGBM
+│   ├── evaluate.py           # AUC-ROC, Gini, KS
+│   └── explain.py            # SHAP + LIME
+├── mlflow/
+│   └── (MLflow tracking store / run configs)
+├── api/
+│   ├── main.py                # FastAPI app: POST /score -> risk score + SHAP explanation
+│   └── Dockerfile
+├── notebooks/
+│   └── eda.ipynb
+├── tests/
+│   └── test_features.py
+├── outputs/
+│   └── shap_plots/
+├── requirements.txt
+└── README.md
+
+====================================================================
+6. MILESTONES
+====================================================================
+M1 — Data + EDA: download dataset, load into SQL DB, explore class balance,
+     missing values, confirm the ~2-5% default rate.
+M2 — SQL joins/aggregations to build the base feature table.
+M3 — PySpark feature engineering: DTI, credit utilization ratio, payment history,
+     income volatility.
+M4 — Imbalance handling with SMOTE (imbalanced-learn).
+M5 — Baseline model: Logistic Regression / scorecard — AUC-ROC, Gini, KS.
+M6 — Advanced models: XGBoost and LightGBM, tuned, same metrics, compared against
+     M5 and against each other.
+M7 — Explainability: SHAP (global summary + local waterfall/force plots per
+     decision) and LIME.
+M8 — MLflow: track all runs (M5-M7) — params, metrics, model artifacts, versions.
+M9 — FastAPI + Docker: POST client profile -> risk score + SHAP explanation,
+     containerized.
+M10 — README + write-up: business problem, data, methodology, results, limitations.
+
+====================================================================
+7. HONESTY / HOW TO TALK ABOUT IT IN INTERVIEWS
+====================================================================
+- Portfolio project on PUBLIC data, not a real bank deployment — say so if asked.
+- A real production version would need model governance/sign-off, drift monitoring,
+  a champion/challenger process, and regulatory documentation — note this as
+  "what's missing for production" in the README's Limitations section.
+- Don't claim a business-impact number (e.g. "reduces defaults by X%") that wasn't
+  actually measured against a real deployment.
+
+====================================================================
+8. CV / APPLICATION TIE-IN (once built)
+====================================================================
+Goes on: Finance Analyst CV (finance-analyst-junior-fr), Data Analyst CV, and as a
+concrete opener for the Société Générale outreach (Lamyae) once there's something
+built, not just intent.

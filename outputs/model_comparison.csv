@@ -1,0 +1,6 @@
+model,auc_roc,gini,ks
+LogReg (class-weighted),0.8588,0.7176,0.5586
+LogReg (SMOTE),0.8591,0.7182,0.562
+XGBoost (weighted),0.8691,0.7383,0.5838
+XGBoost (SMOTE),0.8584,0.7168,0.5693
+LightGBM (weighted),0.8689,0.7377,0.584

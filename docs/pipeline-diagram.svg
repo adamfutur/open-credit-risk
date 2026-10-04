@@ -1,0 +1,142 @@
+<svg viewBox="0 0 1280 620" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4b5563"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="620" fill="#ffffff"/>
+
+  <text x="30" y="36" font-size="22" font-weight="700" fill="#1f2937">Credit Risk Assessment &amp; Default Prediction Engine — Pipeline</text>
+  <text x="30" y="58" font-size="13" fill="#6b7280">Actual pipeline, as run — public "Give Me Some Credit" dataset, 150,000 rows</text>
+
+  <!-- Stage headers -->
+  <g font-size="13" font-weight="700" fill="#ffffff">
+    <rect x="30"  y="80" width="200" height="26" rx="4" fill="#7c6f57"/>
+    <text x="130" y="98" text-anchor="middle">DATA + SQL</text>
+
+    <rect x="270" y="80" width="220" height="26" rx="4" fill="#8b7b53"/>
+    <text x="380" y="98" text-anchor="middle">FEATURE ENGINEERING</text>
+
+    <rect x="530" y="80" width="260" height="26" rx="4" fill="#a98b4a"/>
+    <text x="660" y="98" text-anchor="middle">MODELING &amp; TRACKING</text>
+
+    <rect x="830" y="80" width="200" height="26" rx="4" fill="#c79a3f"/>
+    <text x="930" y="98" text-anchor="middle">EXPLAINABILITY</text>
+
+    <rect x="1070" y="80" width="180" height="26" rx="4" fill="#c79a3f"/>
+    <text x="1160" y="98" text-anchor="middle">SERVING</text>
+  </g>
+
+  <!-- box style helper via repeated rects -->
+  <!-- 1. raw csv -->
+  <rect x="40" y="150" width="180" height="56" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+  <text x="130" y="174" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">cs-training.csv</text>
+  <text x="130" y="192" text-anchor="middle" font-size="11" fill="#6b7280">Kaggle "Give Me Some Credit"</text>
+
+  <!-- 2. load_to_sql -->
+  <rect x="40" y="240" width="180" height="56" rx="8" fill="#eef2ff" stroke="#818cf8"/>
+  <text x="130" y="262" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">load_to_sql.py</text>
+  <text x="130" y="278" text-anchor="middle" font-size="11" fill="#4b5563">+ build_features.sql</text>
+
+  <!-- 3. credit_risk.db -->
+  <rect x="40" y="330" width="180" height="56" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+  <text x="130" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">credit_risk.db</text>
+  <text x="130" y="368" text-anchor="middle" font-size="11" fill="#6b7280">SQLite · table: credit_base</text>
+
+  <!-- 4. build_features.py -->
+  <rect x="280" y="330" width="200" height="56" rx="8" fill="#eef2ff" stroke="#818cf8"/>
+  <text x="380" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">build_features.py</text>
+  <text x="380" y="368" text-anchor="middle" font-size="11" fill="#4b5563">Polars · DTI, utilization, payment history</text>
+
+  <!-- 5. features.parquet -->
+  <rect x="280" y="150" width="200" height="56" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+  <text x="380" y="172" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">features.parquet</text>
+  <text x="380" y="190" text-anchor="middle" font-size="11" fill="#6b7280">9 model-ready columns</text>
+
+  <!-- 6. imbalance.py -->
+  <rect x="540" y="150" width="230" height="56" rx="8" fill="#eef2ff" stroke="#818cf8"/>
+  <text x="655" y="172" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">imbalance.py</text>
+  <text x="655" y="190" text-anchor="middle" font-size="11" fill="#4b5563">SMOTE vs class-weighting (compared)</text>
+
+  <!-- 7. models.py -->
+  <rect x="540" y="330" width="230" height="66" rx="8" fill="#eef2ff" stroke="#818cf8"/>
+  <text x="655" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">models.py</text>
+  <text x="655" y="368" text-anchor="middle" font-size="11" fill="#4b5563">LogReg · XGBoost · LightGBM</text>
+  <text x="655" y="384" text-anchor="middle" font-size="11" fill="#4b5563">AUC-ROC · Gini · KS</text>
+
+  <!-- 8. MLflow -->
+  <rect x="540" y="440" width="230" height="56" rx="8" fill="#fef3c7" stroke="#d97706"/>
+  <text x="655" y="462" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">MLflow (mlflow.db)</text>
+  <text x="655" y="478" text-anchor="middle" font-size="11" fill="#92400e">runs, params, metrics, artifacts</text>
+
+  <!-- 8b. model_comparison.csv -->
+  <rect x="820" y="440" width="210" height="56" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+  <text x="925" y="462" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">model_comparison.csv</text>
+  <text x="925" y="478" text-anchor="middle" font-size="11" fill="#6b7280">outputs/</text>
+
+  <!-- 9. select_best_model.py -->
+  <rect x="820" y="330" width="210" height="56" rx="8" fill="#eef2ff" stroke="#818cf8"/>
+  <text x="925" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">select_best_model.py</text>
+  <text x="925" y="368" text-anchor="middle" font-size="11" fill="#4b5563">picks winner by KS</text>
+
+  <!-- 10. best_model.joblib -->
+  <rect x="820" y="150" width="210" height="56" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+  <text x="925" y="172" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">best_model.joblib</text>
+  <text x="925" y="190" text-anchor="middle" font-size="11" fill="#6b7280">outputs/ · LightGBM (weighted)</text>
+
+  <!-- 11. explain.py -->
+  <rect x="1070" y="150" width="180" height="56" rx="8" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="1160" y="172" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">explain.py</text>
+  <text x="1160" y="190" text-anchor="middle" font-size="11" fill="#166534">SHAP + LIME</text>
+
+  <!-- 11b shap plots -->
+  <rect x="1070" y="240" width="180" height="56" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+  <text x="1160" y="262" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">shap_plots/*.png</text>
+  <text x="1160" y="278" text-anchor="middle" font-size="11" fill="#6b7280">outputs/</text>
+
+  <!-- 12. api/main.py -->
+  <rect x="1070" y="330" width="180" height="66" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="1160" y="352" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">api/main.py</text>
+  <text x="1160" y="368" text-anchor="middle" font-size="11" fill="#1e40af">FastAPI</text>
+  <text x="1160" y="384" text-anchor="middle" font-size="11" fill="#1e40af">POST /score</text>
+
+  <!-- 13. docker -->
+  <rect x="1070" y="440" width="180" height="56" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="1160" y="462" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">api/Dockerfile</text>
+  <text x="1160" y="478" text-anchor="middle" font-size="11" fill="#1e40af">Docker container</text>
+
+  <!-- arrows -->
+  <g stroke="#4b5563" stroke-width="1.8" fill="none" marker-end="url(#arrow)">
+    <path d="M130,206 L130,240"/>                          <!-- csv -> load_to_sql -->
+    <path d="M130,296 L130,330"/>                          <!-- load_to_sql -> db -->
+    <path d="M220,358 L280,358"/>                          <!-- db -> build_features -->
+    <path d="M380,330 L380,206"/>                          <!-- build_features -> parquet -->
+    <path d="M480,178 L540,178"/>                          <!-- parquet -> imbalance.py -->
+    <path d="M655,206 L655,330"/>                          <!-- imbalance -> models.py -->
+    <path d="M655,396 L655,440"/>                          <!-- models -> mlflow -->
+    <path d="M770,466 L820,466"/>                          <!-- mlflow -> model_comparison.csv -->
+    <path d="M925,440 L925,386"/>                          <!-- mlflow -> select_best_model (up) -->
+    <path d="M925,330 L925,206"/>                          <!-- select_best_model -> best_model.joblib -->
+    <path d="M1030,178 L1070,178"/>                        <!-- best_model -> explain.py -->
+    <path d="M1160,206 L1160,240"/>                        <!-- explain -> shap plots -->
+    <path d="M1030,192 L1070,362" stroke-dasharray="4,3"/> <!-- best_model -> api (dashed, secondary consumer) -->
+    <path d="M1160,396 L1160,440"/>                        <!-- api -> docker -->
+  </g>
+
+  <!-- legend -->
+  <g font-size="11" fill="#6b7280">
+    <rect x="30" y="560" width="14" height="14" fill="#f3f4f6" stroke="#9ca3af"/>
+    <text x="50" y="571">data / artifact file</text>
+    <rect x="180" y="560" width="14" height="14" fill="#eef2ff" stroke="#818cf8"/>
+    <text x="200" y="571">Python script</text>
+    <rect x="310" y="560" width="14" height="14" fill="#fef3c7" stroke="#d97706"/>
+    <text x="330" y="571">MLOps tracking</text>
+    <rect x="450" y="560" width="14" height="14" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="470" y="571">explainability</text>
+    <rect x="610" y="560" width="14" height="14" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="630" y="571">serving / deployment</text>
+  </g>
+
+  <text x="30" y="600" font-size="11" fill="#9ca3af">Portfolio project on public data — no MQTT/IoT/microservices sources; single-source batch pipeline. See README "Limitations".</text>
+</svg>
