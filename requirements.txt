@@ -13,3 +13,5 @@ joblib
 polars
 pyarrow
 matplotlib
+pytest
+httpx
